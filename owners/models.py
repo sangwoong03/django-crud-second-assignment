@@ -11,8 +11,8 @@ class Owner(models.Model) :
         db_table = "owners"
 
 class Dog(models.Model) :
-    name  = models.IntegerField(null=True)
-    age   = models.CharField(max_length=45)
+    name  = models.CharField(max_length=45, default="")
+    age   = models.IntegerField(null=True)
     owner = models.ForeignKey("Owner", on_delete=models.CASCADE) 
 
     class Meta:
