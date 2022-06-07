@@ -4,5 +4,5 @@ from .views import OwnerList, DogList
 
 urlpatterns = [
     path('', OwnerList.as_view()),
-    path('dogs', DogList.as_view()),
+    path('/dogs', DogList.as_view()),
 ]

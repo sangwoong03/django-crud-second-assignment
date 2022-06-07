@@ -31,12 +31,12 @@ class DogList(View):
     
     dog_name  = data["name"]
     dog_age   = data["age"]
-    owner     = Owner.objects.get(name=data["owner"])
+    owner     = data["owner_id"] #Owner.objects.get(name=data["owner"])도 가능
 
     Dog.objects.create(
-        name  = dog_name,
-        age   = dog_age,
-        owner = owner
+        name     = dog_name,
+        age      = dog_age,
+        owner_id = owner
     )
 
     return JsonResponse({'messasge':'강아지 정보가 등록되었습니다.'}, status=201)
