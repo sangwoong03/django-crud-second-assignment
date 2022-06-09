@@ -8,7 +8,7 @@ from django.views import View
 
 from movies.models import Movie, Actor
 
-class MovieList(View):
+class MovieView(View):
 
   def get(self, request):
     movies  = Movie.objects.all()
@@ -28,7 +28,7 @@ class MovieList(View):
   
     return JsonResponse({"영화 정보": results }, status=200)
 
-class ActorList(View):
+class ActorView(View):
   
   def get(self, request):
     actors  = Actor.objects.all()
