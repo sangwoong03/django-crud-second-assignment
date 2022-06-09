@@ -15,7 +15,6 @@ class MovieList(View):
     results = []
 
     for movie in movies :
-      actors  = Actor.objects.all()
       title   = movie.title
       runtime = movie.running_time_min
 
@@ -23,7 +22,7 @@ class MovieList(View):
         {
           "제목": title,
           "상영시간": runtime,
-          "출연진" : [actor.last_name + actor.first_name for actor in actors]
+          "출연진" : [actor.last_name + actor.first_name for actor in movie.actors.all()]
         }
       )
   
@@ -36,13 +35,12 @@ class ActorList(View):
     results = []
 
     for actor in actors :
-      movies = Movie.objects_set.all()
-      name = actor.last_name + actor.first_name
+      name   = actor.last_name + actor.first_name
 
       results.append(
         {
           "이름": name,
-          "출연작": [movie.title for movie in movies]
+          "출연작": [movie.title for movie in actor.movie_set.all()]
         }
       )
     

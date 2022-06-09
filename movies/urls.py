@@ -3,6 +3,6 @@ from django.urls import path
 from .views import ActorList, MovieList
 
 urlpatterns = [
-    path('', MovieList.as_view()),
-    path('/actors', ActorList.as_view()),
+    path('/movie', MovieList.as_view()),
+    path('/actor', ActorList.as_view()),
 ]
