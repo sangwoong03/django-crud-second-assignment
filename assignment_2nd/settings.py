@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     "corsheaders",
     "owners",
     "movies",
-    "users"
+    "users",
+    "core"
 ]
 
 MIDDLEWARE = [
