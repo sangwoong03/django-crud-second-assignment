@@ -24,10 +24,6 @@ class SignUpView(View) :
         EMAIL_CHECK = "^[a-zA-Z0-9+_.]+@[a-zA-Z0-9-.]+$"
         PW_CHECK    = "^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$"
         
-        # 이메일 중복 확인
-        if User.objects.filter(email = email).exists() :
-            return JsonResponse({"message" : "THIS_EMAIL_ALEADY_EXIST"}, status = 400)
-
         # 이메일에 "@" "." 여부 확인
         if not re.match(EMAIL_CHECK, email) :
             return JsonResponse({"message": "INVALID EMAIL"}, status=401)
@@ -35,6 +31,10 @@ class SignUpView(View) :
         # 비밀번호가 8자리 이상의 문자, 숫자, 특수문자 포함 확인
         if not re.match(PW_CHECK, password) :
             return JsonResponse({"message": "INVALID PASSWORD"}, status=401)
+            
+        # 이메일 중복 확인
+        if User.objects.filter(email = email).exists() :
+            return JsonResponse({"message" : "THIS_EMAIL_ALEADY_EXIST"}, status = 400)
 
         encoded_password = password.encode("utf-8") # 문자열 > 바이트 인코딩
         secret_password  = bcrypt.hashpw(encoded_password, bcrypt.gensalt()) # 해싱
