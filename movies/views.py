@@ -6,32 +6,43 @@ import json
 from django.http import JsonResponse
 from django.views import View
 
-from movies.models import Movie, Actor, MovieActor
+from movies.models import Movie, Actor
 
-class MovieList(View):
+class MovieView(View):
 
   def get(self, request):
-    movies  = Movie.objects.all();
-    results = [
-      {
-        "제목"   : movie.title,
-        "상영시간": f"{movie.running_time_min}분",
-        "출연배우": [movie_actor.actor.last_name + movie_actor.actor.first_name for movie_actor in MovieActor.objects.filter(movie_id=movie.id)]
-      } for movie in movies
-    ]
+    movies  = Movie.objects.all()
+    results = []
+
+    for movie in movies :
+      title   = movie.title
+      runtime = movie.running_time_min
+
+      results.append(
+        {
+          "제목": title,
+          "상영시간": runtime,
+          "출연진" : [actor.last_name + actor.first_name for actor in movie.actors.all()]
+        }
+      )
   
     return JsonResponse({"영화 정보": results }, status=200)
 
-class ActorList(View):
+class ActorView(View):
   
   def get(self, request):
     actors  = Actor.objects.all()
-    results = [
-      {
-        "이름": actor.last_name + actor.first_name,
-        "출연작": [movie_actor.movie.title for movie_actor in MovieActor.objects.filter(actor_id=actor.id)]
-      } for actor in actors
-    ]
+    results = []
+
+    for actor in actors :
+      name   = actor.last_name + actor.first_name
+
+      results.append(
+        {
+          "이름": name,
+          "출연작": [movie.title for movie in actor.movie_set.all()]
+        }
+      )
     
 
     return JsonResponse({"배우 정보": results}, status=200)
