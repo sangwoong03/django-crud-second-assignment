@@ -1,4 +1,5 @@
 import json
+from lib2to3.pgen2 import token
 
 from django.http import JsonResponse
 from django.views import View
@@ -45,17 +46,18 @@ class PostView(View) :
         return JsonResponse({"data" : post_list}, status=200)
 
 class PostSearchView(View) :
-    def get(self, request, user_id):
+    # @token_decorator
+    def get(self, request,user_id):
         try:
+            # user = request.user
             user = User.objects.get(id = user_id)
-            
             post_list = [
                 {
                     "account"      : user.account,
                     "content"      : post.content,
                     "image_url"    : [image.image_url for image in Image.objects.filter(post_id = post.id)],
                     "created_date" : post.created_at
-                } for post in Post.objects.all()
+                } for post in Post.objects.filter(user_id = user.id)
             ]
             
             return JsonResponse({"data" : post_list}, status=200)
