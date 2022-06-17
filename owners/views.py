@@ -58,8 +58,8 @@ class DogList(View):
 			owner     = Owner.objects.get(name=data["owner"])
 
 			Dog.objects.create(
-					name     = dog_name,
-					age      = dog_age,
+					name  = dog_name,
+					age   = dog_age,
 					owner = owner
 			)
 			
