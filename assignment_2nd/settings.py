@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     "owners",
     "movies",
     "users",
-    "core"
+    "core",
+    "postings"
 ]
 
 MIDDLEWARE = [
