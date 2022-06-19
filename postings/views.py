@@ -128,15 +128,16 @@ class LikeView(View):
 
             post = Post.objects.get(id = post_id)
 
+            if Like.objects.filter(user=user, post=post).exists() :
+                Like.objects.filter(user=user, post=post).delete()
+                like_count = Like.objects.filter(post=post).count()
+                return JsonResponse({"message": "SUCCESS", "like_count" : like_count}, status=200)
+
             Like.objects.create(
                 user = user,
                 post = post
             )
             like_count = Like.objects.filter(post=post).count()
-
-            if Like.objects.filter(user=user, post=post).exists() :
-                Like.objects.filter(user=user, post=post).delete()
-                return JsonResponse({"message": "SUCCESS", "like_count" : like_count}, status=200)
 
             return JsonResponse({"message": "SUCCESS", "like_count" : like_count}, status=201)
         except KeyError:
