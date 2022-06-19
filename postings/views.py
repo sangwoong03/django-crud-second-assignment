@@ -1,11 +1,12 @@
 from ast import JoinedStr
 import json
+from lib2to3.pgen2 import token
 
 from django.http import JsonResponse
 from django.views import View
 
 from users.models import User
-from .models import Post, Image, Comment
+from .models import Post, Image, Comment, Like
 
 from users.utils import token_decorator
 
@@ -116,3 +117,29 @@ class CommentSearchView(View):
         
         except Post.DoesNotExist :
             return JsonResponse({"message": "INVALID_POST"})
+
+class LikeView(View):
+    @token_decorator
+    def post(self, request) :
+        try:
+            data = json.loads(request.body)
+            user = request.user
+            post_id = data.get("post_id", None)
+
+            post = Post.objects.get(id = post_id)
+
+            Like.objects.create(
+                user = user,
+                post = post
+            )
+            like_count = Like.objects.filter(post=post).count()
+
+            if Like.objects.filter(user=user, post=post).exists() :
+                Like.objects.filter(user=user, post=post).delete()
+                return JsonResponse({"message": "SUCCESS", "like_count" : like_count}, status=200)
+
+            return JsonResponse({"message": "SUCCESS", "like_count" : like_count}, status=201)
+        except KeyError:
+            return JsonResponse({"message" : "KEY_ERROR"}, status=400)
+        except Post.DoesNotExist:
+            return JsonResponse({"message" : "INVALID_POST"}, status=400)
